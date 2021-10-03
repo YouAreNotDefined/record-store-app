@@ -97,7 +97,7 @@ export default {
     return {
       artists: [],
       records: [],
-      newRecord: [],
+      newRecord: '',
       error: '',
       editedRecord: ''
     }
@@ -135,7 +135,6 @@ export default {
         return
       }
       this.$http.secured.post('/api/v1/records/', { record: { title: this.newRecord.title, year: this.newRecord.year, artist_id: this.newRecord.artist } })
-
         .then(response => {
           this.records.push(response.data)
           this.newRecord = ''
