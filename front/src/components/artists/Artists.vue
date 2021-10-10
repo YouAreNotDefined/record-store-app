@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-md m-auto py-10">
-    <div class="text-red" v-if="error">{{ error }}</div>
+    <div class="text-red-400" v-if="error">{{ error }}</div>
     <h3 class="font-mono font-regular text-3xl mb-4">Add a new artist</h3>
     <form action="" @submit.prevent="addArtist">
       <div class="mb-6">
@@ -9,10 +9,10 @@
           placeholder="Type an arist name"
           v-model="newArtist.name" />
       </div>
-      <input type="submit" value="Add Artist" class="font-sans font-bold px-4 rounded cursor-pointer no-underline bg-green hover:bg-green-dark block w-full py-4 text-white items-center justify-center" />
+      <input type="submit" value="Add Artist" class="font-sans font-bold px-4 rounded cursor-pointer no-underline bg-green-400 hover:bg-green-500 block w-full py-4 text-white items-center justify-center" />
     </form>
 
-    <hr class="border border-grey-light my-6" />
+    <hr class="border border-grey-300 my-6" />
 
     <ul class="list-reset mt-4">
       <li class="py-4" v-for="artist in artists" :key="artist.id" :artist="artist">
@@ -23,18 +23,18 @@
             {{ artist.name }}
           </p>
 
-          <button class="bg-tranparent text-sm hover:bg-blue hover:text-white text-blue border border-blue no-underline font-bold py-2 px-4 mr-2 rounded"
+          <button class="bg-tranparent text-sm hover:bg-blue-400 hover:text-white text-blue-400 border border-blue-400 no-underline font-bold py-2 px-4 mr-2 rounded"
           @click.prevent="editArtist(artist)">Edit</button>
 
-          <button class="bg-transprent text-sm hover:bg-red text-red hover:text-white no-underline font-bold py-2 px-4 rounded border border-red"
+          <button class="bg-transprent text-sm hover:bg-red-400 text-red-400 hover:text-white no-underline font-bold py-2 px-4 rounded border border-red-400"
           @click.prevent="removeArtist(artist)">Delete</button>
         </div>
 
         <div v-if="artist == editedArtist">
           <form action="" @submit.prevent="updateArtist(artist)">
-            <div class="mb-6 p-4 bg-white rounded border border-grey-light mt-4">
+            <div class="mb-6 p-4 bg-white rounded border border-grey-300 mt-4">
               <input class="input" v-model="artist.name" />
-              <input type="submit" value="Update" class=" my-2 bg-transparent text-sm hover:bg-blue hover:text-white text-blue border border-blue no-underline font-bold py-2 px-4 rounded cursor-pointer">
+              <input type="submit" value="Update" class="my-2 bg-transparent text-sm hover:bg-blue-400 hover:text-white text-blue-400 border border-blue-400 no-underline font-bold py-2 px-4 rounded cursor-pointer">
             </div>
           </form>
         </div>
@@ -49,7 +49,9 @@ export default {
   data () {
     return {
       artists: [],
-      newArtist: '',
+      newArtist: {
+        name: ''
+      },
       error: '',
       editedArtist: ''
     }
@@ -75,7 +77,7 @@ export default {
       this.$http.secured.post('/api/v1/artists/', { artist: { name: value.name } })
         .then(response => {
           this.artists.push(response.data)
-          this.newArtist = ''
+          this.newArtist.name = ''
         })
         .catch(error => this.setError(error, 'Cannot create artist'))
     },

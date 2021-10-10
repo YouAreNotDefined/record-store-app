@@ -3,7 +3,7 @@
     <div class="border p-10 border-grey-light shadow rounded">
       <h3 class="text-2xl mb-6 text-grey-darkest">Sign In</h3>
       <form @submit.prevent="signin">
-        <div class="text-red" v-if="error">{{ error }}</div>
+        <div class="text-400" v-if="error">{{ error }}</div>
         <div class="mb-6">
           <label for="email" class="label">E-mail Address</label>
           <input type="email" v-model="email" class="input" id="email" placeholder="example@example.com">

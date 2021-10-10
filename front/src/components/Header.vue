@@ -28,6 +28,9 @@ export default {
   created () {
     this.signedIn()
   },
+  updated () {
+    this.signedIn()
+  },
   methods: {
     setError (error, text) {
       this.error = (error.response && error.response.data && error.response.data.error) || text

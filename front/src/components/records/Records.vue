@@ -34,10 +34,10 @@
           <option disabled value="">Select an artist</option>
           <option :value="artist.id" v-for="artist in artists" :key="artist.id">{{ artist.name }}</option>
         </select>
-        <p class="pt-4">Don't see an artist? <router-link to="/artists" class="link-grey">Create one</router-link></p>
+        <p class="pt-4">Don't see an artist? <router-link to="/artists" class="text-blue-500 underline hover:opacity-60">Create one</router-link></p>
       </div>
 
-      <input type="submit" value="Add Record" class="font-sans font-bold px-4 rounded cursor-pointer no-underline bg-green hover:bg-green-dark block w-full py-4 text-white items-center justify-center">
+      <input type="submit" value="Add Record" class="font-sans font-bold px-4 rounded cursor-pointer no-underline bg-green-400 hover:bg-green-500 block w-full py-4 text-white items-center justify-center">
     </form>
 
     <hr class="border border-grey-light my-6" />
@@ -53,10 +53,10 @@
           <p class="block font-mono font-semibold">{{ getArtist(record) }}</p>
         </div>
 
-        <button class="bg-transparent text-sm hover:bg-blue hover:text-white text-blue border border-blue no-underline font-bold py-2 px-4 mr-2 rounded"
+        <button class="bg-transparent text-sm hover:bg-blue-400 hover:text-white text-blue-400 border border-blue-400 no-underline font-bold py-2 px-4 mr-2 rounded"
           @click.prevent="editRecord(record)">Edit</button>
 
-        <button class="bg-transparent text-sm hover:bg-red text-red hover:text-white no-underline font-bold py-2 px-4 rounded border border-red"
+        <button class="bg-transparent text-sm hover:bg-red-400 text-red-400 hover:text-white no-underline font-bold py-2 px-4 rounded border border-red-400"
         @click.prevent="removeRecord(record)">Delete</button>
         </div>
 
@@ -81,7 +81,7 @@
                 </select>
               </div>
 
-              <input type="submit" value="Update" class="bg-transparent text-sm hover:bg-blue hover:text-white text-blue border border-blue no-underline font-bold py-2 px-4 mr-2 rounded">
+              <input type="submit" value="Update" class="bg-transparent text-sm hover:bg-blue-400 hover:text-white text-blue-400 border border-blue-400 no-underline font-bold py-2 px-4 mr-2 rounded">
             </div>
           </form>
         </div>
@@ -97,7 +97,11 @@ export default {
     return {
       artists: [],
       records: [],
-      newRecord: '',
+      newRecord: {
+        title: '',
+        year: '',
+        artist: null
+      },
       error: '',
       editedRecord: ''
     }
@@ -137,7 +141,11 @@ export default {
       this.$http.secured.post('/api/v1/records/', { record: { title: this.newRecord.title, year: this.newRecord.year, artist_id: this.newRecord.artist } })
         .then(response => {
           this.records.push(response.data)
-          this.newRecord = ''
+          this.newRecord = {
+            title: '',
+            year: '',
+            artist: null
+          }
         })
         .catch(error => this.setError(error, 'Cannot create record'))
     },

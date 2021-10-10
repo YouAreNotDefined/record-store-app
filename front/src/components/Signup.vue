@@ -3,7 +3,7 @@
     <div class="border p-10 border-grey-light shadow rounded">
       <h3 class="text-2xl mb-6 text-grey-darkest">Sign Up</h3>
       <form @submit.prevent="signup">
-        <div class="text-red" v-if="error">{{ error }}</div>
+        <div class="text-red-400" v-if="error">{{ error }}</div>
 
         <div class="mb-6">
           <label for="email" class="label">E-mail Address</label>
