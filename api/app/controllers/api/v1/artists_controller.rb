@@ -1,12 +1,12 @@
 module Api
   module V1
     class ArtistsController < ApplicationController
-      before_action :authorize_access_request!, except: [:show, :index]
+      before_action :authorize_access_request!
       before_action :set_artist, only: [:show, :update, :destroy]
 
       # GET /artists
       def index
-        @artists = Artist.all
+        @artists = current_user.artists.all
       end
 
       # GET /artists/1
@@ -15,7 +15,7 @@ module Api
 
       # POST /artists
       def create
-        @artist = Artist.new(artist_params)
+        @artist = current_user.artists.build(artist_params)
 
         if @artist.save
           render status: :created
@@ -40,7 +40,7 @@ module Api
       private
         # Use callbacks to share common setup or constraints between actions.
         def set_artist
-          @artist = Artist.find(params[:id])
+          @artist = current_user.artists.find(params[:id])
         end
 
         # Only allow a trusted parameter "white list" through.
