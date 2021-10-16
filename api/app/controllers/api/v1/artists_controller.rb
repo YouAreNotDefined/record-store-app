@@ -7,13 +7,10 @@ module Api
       # GET /artists
       def index
         @artists = Artist.all
-
-        render json: @artists
       end
 
       # GET /artists/1
       def show
-        render json: @artist
       end
 
       # POST /artists
@@ -21,18 +18,17 @@ module Api
         @artist = Artist.new(artist_params)
 
         if @artist.save
-          render json: @artist, status: :created
+          render status: :created
         else
-          render json: @artist.errors, status: :unprocessable_entity
+          render status: :unprocessable_entity
         end
       end
 
       # PATCH/PUT /artists/1
       def update
         if @artist.update(artist_params)
-          render json: @artist
         else
-          render json: @artist.errors, status: :unprocessable_entity
+          render status: :unprocessable_entity
         end
       end
 

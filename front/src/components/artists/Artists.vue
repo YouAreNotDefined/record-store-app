@@ -35,6 +35,7 @@
             <div class="mb-6 p-4 bg-white rounded border border-grey-300 mt-4">
               <input class="input" v-model="artist.name" />
               <input type="submit" value="Update" class="my-2 bg-transparent text-sm hover:bg-blue-400 hover:text-white text-blue-400 border border-blue-400 no-underline font-bold py-2 px-4 rounded cursor-pointer">
+              <button @click.prevent="cancelUpdate" class="bg-transparent text-sm hover:bg-red-400 hover:text-white text-red-400 border border-red-400 no-underline font-bold py-2 px-4 mr-2 rounded cursor-pointer ml-2">Cancel</button>
             </div>
           </form>
         </div>
@@ -95,6 +96,9 @@ export default {
       this.editedArtist = ''
       this.$http.secured.patch(`/api/v1/artists/${artist.id}`, { artist: { name: artist.name } })
         .catch(error => this.setError(error, 'Cannot update artist'))
+    },
+    cancelUpdate () {
+      this.editedArtist = ''
     }
   }
 }

@@ -7,13 +7,10 @@ module Api
       # GET /records
       def index
         @records = current_user.records.all
-
-        render json: @records
       end
 
       # GET /records/1
       def show
-        render json: @record
       end
 
       # POST /records
@@ -21,18 +18,17 @@ module Api
         @record = current_user.records.build(record_params)
 
         if @record.save
-          render json: @record, status: :created
+          render status: :created
         else
-          render json: @record.errors, status: :unprocessable_entity
+          render status: :unprocessable_entity
         end
       end
 
       # PATCH/PUT /records/1
       def update
         if @record.update(record_params)
-          render json: @record
         else
-          render json: @record.errors, status: :unprocessable_entity
+          render status: :unprocessable_entity
         end
       end
 

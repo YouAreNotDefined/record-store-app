@@ -1,6 +1,6 @@
 <template>
-  <div class="max-w-md m-auto py-10">
-    <div class="text-red" v-if="error">{{ error }}</div>
+  <div class="max-w-lg m-auto py-10">
+    <div class="text-red-400" v-if="error">{{ error }}</div>
     <h3 class="font-mono font-regular text-3xl mb-4">Add a new record</h3>
 
     <form @submit.prevent="addRecord">
@@ -81,7 +81,8 @@
                 </select>
               </div>
 
-              <input type="submit" value="Update" class="bg-transparent text-sm hover:bg-blue-400 hover:text-white text-blue-400 border border-blue-400 no-underline font-bold py-2 px-4 mr-2 rounded">
+              <input type="submit" value="Update" class="bg-transparent text-sm hover:bg-blue-400 hover:text-white text-blue-400 border border-blue-400 no-underline font-bold py-2 px-4 mr-2 rounded cursor-pointer">
+              <button @click.prevent="cancelUpdate" class="bg-transparent text-sm hover:bg-red-400 hover:text-white text-red-400 border border-red-400 no-underline font-bold py-2 px-4 mr-2 rounded cursor-pointer">Cancel</button>
             </div>
           </form>
         </div>
@@ -163,6 +164,9 @@ export default {
       this.editedRecord = ''
       this.$http.secured.patch(`/api/v1/records/${record.id}`, { record: { title: record.title, year: record.year, artist_id: record.artist } })
         .catch(error => this.setError(error, 'Cannot update record'))
+    },
+    cancelUpdate () {
+      this.editedRecord = ''
     }
   }
 }
