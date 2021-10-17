@@ -54,7 +54,8 @@ export default {
         name: ''
       },
       error: '',
-      editedArtist: ''
+      editedArtist: '',
+      beforeEditedArtist: ''
     }
   },
   created () {
@@ -79,26 +80,43 @@ export default {
         .then(response => {
           this.artists.push(response.data)
           this.newArtist.name = ''
+          this.error = ''
         })
         .catch(error => this.setError(error, 'Cannot create artist'))
     },
     removeArtist (artist) {
-      this.$http.secured.delete(`/api/v1/artists/${artist.id}`)
-        .then(response => {
-          this.artists.splice(this.artists.indexOf(artist), 1)
-        })
-        .catch(error => this.setError(error, 'Cannot delete artist'))
+      if (confirm('Are you sure?')) {
+        this.$http.secured.delete(`/api/v1/artists/${artist.id}`)
+          .then(response => {
+            this.artists.splice(this.artists.indexOf(artist), 1)
+            this.error = ''
+          })
+          .catch(error => this.setError(error, 'Cannot delete artist'))
+      }
     },
     editArtist (artist) {
       this.editedArtist = artist
+      this.beforeEditedArtist = Object.assign({}, artist)
     },
     updateArtist (artist) {
       this.editedArtist = ''
+      this.beforeEditedArtist = ''
       this.$http.secured.patch(`/api/v1/artists/${artist.id}`, { artist: { name: artist.name } })
+        .then(response => {
+          this.error = ''
+        })
         .catch(error => this.setError(error, 'Cannot update artist'))
     },
     cancelUpdate () {
+      const newVal = this.editedArtist
+      const oldVal = this.beforeEditedArtist
+
+      if (newVal.name !== oldVal.name) {
+        newVal.name = oldVal.name
+      }
+
       this.editedArtist = ''
+      this.beforeEditedArtist = ''
     }
   }
 }

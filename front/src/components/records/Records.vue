@@ -50,7 +50,7 @@
             <svg class="fill-current text-indigo w-6 h-6 mr-2" viewBox="0 0 24 24" width="24" height="24"><title>record vinyl</title><path d="M23.938 10.773a11.915 11.915 0 0 0-2.333-5.944 12.118 12.118 0 0 0-1.12-1.314A11.962 11.962 0 0 0 12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12c0-.414-.021-.823-.062-1.227zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-5a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" ></path></svg>
             {{ record.title }} &mdash; {{ record.year }}
           </p>
-          <p class="block font-mono font-semibold">{{ getArtist(record) }}</p>
+          <p class="block font-mono font-semibold" v-if="artists.length">{{ getArtist(record) }}</p>
         </div>
 
         <button class="bg-transparent text-sm hover:bg-blue-400 hover:text-white text-blue-400 border border-blue-400 no-underline font-bold py-2 px-4 mr-2 rounded"
@@ -60,7 +60,7 @@
           @click.prevent="removeRecord(record)">Delete</button>
         </div>
 
-        <div v-if="record == editedRecord">
+        <div v-if="Object.is(record, editedRecord)">
           <form action="" @submit.prevent="updateRecord(record)">
             <div class="mb-6 p-4 bg-white rounded border border-grey-light mt-4">
 
@@ -75,14 +75,16 @@
               </div>
 
               <div class="mb-6">
-                <select id="artist_update" class="select" v-model="record.artist">
+                <select id="artist_update" class="select" v-model="record.artist_id">
                   <option disabled value="">Select an artist</option>
-                <option :value="artist.id" v-for="artist in artists" :key="artist.id">{{ artist.name }}</option>
+                  <option :value="artist.id" v-for="artist in artists" :key="artist.id">
+                    {{ artist.name }}
+                  </option>
                 </select>
               </div>
 
               <input type="submit" value="Update" class="bg-transparent text-sm hover:bg-blue-400 hover:text-white text-blue-400 border border-blue-400 no-underline font-bold py-2 px-4 mr-2 rounded cursor-pointer">
-              <button @click.prevent="cancelUpdate" class="bg-transparent text-sm hover:bg-red-400 hover:text-white text-red-400 border border-red-400 no-underline font-bold py-2 px-4 mr-2 rounded cursor-pointer">Cancel</button>
+              <button @click.prevent="cancelUpdate()" class="bg-transparent text-sm hover:bg-red-400 hover:text-white text-red-400 border border-red-400 no-underline font-bold py-2 px-4 mr-2 rounded cursor-pointer">Cancel</button>
             </div>
           </form>
         </div>
@@ -104,7 +106,8 @@ export default {
         artist: null
       },
       error: '',
-      editedRecord: ''
+      editedRecord: '',
+      beforeEditedRecord: ''
     }
   },
   created () {
@@ -125,14 +128,9 @@ export default {
       this.error = (error.response && error.response.data && error.response.data.error) || text
     },
     getArtist (record) {
-      const recordArtistValues = this.artists.filter(artist => artist.id === record.artist_id)
-      let artist
+      const artist = this.artists.find(artist => artist.id === record.artist_id)
 
-      recordArtistValues.forEach(function (element) {
-        artist = element.name
-      })
-
-      return artist
+      return artist.name
     },
     addRecord () {
       const value = this.newRecord
@@ -147,26 +145,50 @@ export default {
             year: '',
             artist: null
           }
+          this.error = ''
         })
         .catch(error => this.setError(error, 'Cannot create record'))
     },
     removeRecord (record) {
-      this.$http.secured.delete(`/api/v1/records/${record.id}`)
-        .then(response => {
-          this.records.splice(this.records.indexOf(record), 1)
-        })
-        .catch(error => this.setError(error, 'Cannot delete record'))
+      if (confirm('Are you sure?')) {
+        this.$http.secured.delete(`/api/v1/records/${record.id}`)
+          .then(response => {
+            this.records.splice(this.records.indexOf(record), 1)
+            this.error = ''
+          })
+          .catch(error => this.setError(error, 'Cannot delete record'))
+      }
     },
     editRecord (record) {
       this.editedRecord = record
+      this.beforeEditedRecord = Object.assign({}, record)
     },
     updateRecord (record) {
       this.editedRecord = ''
-      this.$http.secured.patch(`/api/v1/records/${record.id}`, { record: { title: record.title, year: record.year, artist_id: record.artist } })
+      this.beforeEditedRecord = ''
+
+      this.$http.secured.patch(`/api/v1/records/${record.id}`, { record: { title: record.title, year: record.year, artist_id: record.artist_id } })
+        .then(response => {
+          this.error = ''
+        })
         .catch(error => this.setError(error, 'Cannot update record'))
     },
     cancelUpdate () {
+      const newVal = this.editedRecord
+      const oldVal = this.beforeEditedRecord
+
+      if (newVal.title !== oldVal.title) {
+        newVal.title = oldVal.title
+      }
+      if (newVal.year !== oldVal.year) {
+        newVal.year = oldVal.year
+      }
+      if (newVal.artist_id !== oldVal.artist_id) {
+        newVal.artist_id = oldVal.artist_id
+      }
+
       this.editedRecord = ''
+      this.beforeEditedRecord = ''
     }
   }
 }
