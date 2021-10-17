@@ -4,14 +4,11 @@ import router from './router'
 import VueAxios from 'vue-axios'
 import { securedAxiosInstance, plainAxiosInstance } from './backend/axios'
 import '@/assets/style/tailwind.css'
-
-// const config = {
-//   el: '#app',
-//   securedAxiosInstance,
-//   plainAxiosInstance
-// }
+// import { createVuetify } from 'vuetify'
 
 const app = createApp(App)
+// const vuetify = createVuetify()
+// app.use(vuetify)
 
 app.use(router)
 

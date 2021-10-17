@@ -25,10 +25,24 @@
 
       <div class="mb-6">
         <label for="record" class="label">Record</label>
-        <select id="record" class="select">
-          <option disabled value="">Select a record</option>
-          <option :value="record.id" v-for="record in records" :key="record.id">{{ record.title }} &mdash; {{ record.year }}</option>
-        </select>
+        <Multiselect
+          v-model="library.records"
+          :options="records"
+          mode="multiple"
+          placeholder="Select some record"
+          value-prop="id"
+          label="title">
+            <template v-slot:multiplelabel="{ values }">
+              <div class="absolute left-0 flex">
+                <div
+                  class="text-xs font-bold leading-sm py-1 px-2 bg-green-200 text-green-700 rounded-full ml-2"
+                  v-for="value in values"
+                  :key="value.id">
+                  {{ value.title }} - {{ value.year }}
+                </div>
+              </div>
+            </template>
+        </Multiselect>
       </div>
 
       <input type="submit" value="Edit Library" class="font-sans font-bold px-4 rounded cursor-pointer no-underline bg-green-400 hover:bg-green-500 block w-full py-4 text-white items-center justify-center">
@@ -37,16 +51,22 @@
 </template>
 
 <script>
+import Multiselect from '@vueform/multiselect'
+
 export default {
   data () {
     return {
       error: '',
       library: {
         name: '',
-        content: ''
+        content: '',
+        records: []
       },
       records: []
     }
+  },
+  components: {
+    Multiselect
   },
   created () {
     this.$http.secured.get(`/api/v1/libraries/${this.$route.params.id}`)
@@ -66,3 +86,5 @@ export default {
   }
 }
 </script>
+
+<style src="@vueform/multiselect/themes/default.css"></style>
