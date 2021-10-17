@@ -3,6 +3,8 @@ import Signin from '@/components/Signin.vue'
 import Signup from '@/components/Signup.vue'
 import Artists from '@/components/artists/Artists.vue'
 import Records from '@/components/records/Records.vue'
+import Libraries from '@/components/libraries/Libraries.vue'
+import library from '@/components/libraries/_id.vue'
 
 export default createRouter({
   history: createWebHistory(),
@@ -26,6 +28,15 @@ export default createRouter({
       path: '/records',
       name: 'Records',
       component: Records
+    },
+    {
+      path: '/libraries',
+      name: 'Libraries',
+      component: Libraries
+    },
+    {
+      path: '/libraries/:id',
+      component: library
     }
   ]
 })

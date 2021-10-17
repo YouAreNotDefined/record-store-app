@@ -2,13 +2,14 @@ module Api
   module V1
     class LibrariesController < ApplicationController
       before_action :authorize_access_request!
-      before_action :set_library, expect: [:index, :create]
+      before_action :set_library, except: [:index, :create]
 
       def index
         @libraries = current_user.libraries.all
       end
 
       def show
+        @records = @library.record_libraries
       end
 
       def create
@@ -40,7 +41,7 @@ module Api
       end
 
       def library_params
-        params.require(:library).permit(:name, :content, :user_id)
+        params.require(:library).permit(:name, :content)
       end
     end
   end

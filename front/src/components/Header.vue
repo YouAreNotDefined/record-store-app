@@ -11,6 +11,7 @@
         <router-link to="/signup" class="link-grey px-2 no-underline font-semibold hover:opacity-70" active-class="pointer-events-none text-indigo-400" v-if="!signedIn()">Sign Up</router-link>
         <router-link to="/records" class="link-grey px-2 no-underline font-semibold hover:opacity-70" active-class="pointer-events-none text-indigo-400" v-if="signedIn()">Records</router-link>
         <router-link to="/artists" class="link-grey px-2 no-underline font-semibold hover:opacity-70" active-class="pointer-events-none text-indigo-400" v-if="signedIn()">Artists</router-link>
+        <router-link to="/libraries" class="link-grey px-2 no-underline font-semibold hover:opacity-70" active-class="pointer-events-none text-indigo-400" v-if="signedIn()">Libraries</router-link>
         <a href="#" @click.prevent="signOut" class="link-grey px-2 no-underline font-semibold hover:opacity-70" v-if="signedIn()">Sign out</a>
       </div>
     </div>
