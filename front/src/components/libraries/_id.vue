@@ -26,7 +26,7 @@
       <div class="mb-6">
         <label for="record" class="label">Record</label>
         <Multiselect
-          v-model="library.records"
+          v-model="currentRecords"
           :options="records"
           mode="multiple"
           placeholder="Select some record"
@@ -47,6 +47,7 @@
 
       <input type="submit" value="Edit Library" class="font-sans font-bold px-4 rounded cursor-pointer no-underline bg-green-400 hover:bg-green-500 block w-full py-4 text-white items-center justify-center">
     </form>
+    <router-link to="/libraries" class="inline-block mt-10 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded">&lt; Back</router-link>
   </div>
 </template>
 
@@ -59,9 +60,9 @@ export default {
       error: '',
       library: {
         name: '',
-        content: '',
-        records: []
+        content: ''
       },
+      currentRecords: [],
       records: []
     }
   },
@@ -71,7 +72,9 @@ export default {
   created () {
     this.$http.secured.get(`/api/v1/libraries/${this.$route.params.id}`)
       .then(responce => {
-        this.library = responce.data
+        this.library = responce.data.library
+        console.log(responce.data.records)
+        this.currentRecords = responce.data.records.map(record => record.id)
       })
       .catch(error => this.setError(error, 'Something went wrong'))
 
@@ -81,7 +84,14 @@ export default {
   },
   methods: {
     editLibrary () {
-
+      this.$http.secured.patch(`/api/v1/libraries/${this.$route.params.id}`, { library: { name: this.library.name, content: this.library.content, record_ids: this.currentRecords } })
+        .then(responce => {
+          this.$router.replace('/libraries')
+        })
+        .catch(error => this.setError(error, 'Can not update'))
+    },
+    setError (error, text) {
+      this.error = (error.response && error.response.data && error.response.data.error) || text
     }
   }
 }

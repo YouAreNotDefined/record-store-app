@@ -48,7 +48,7 @@
       <input type="submit" value="Add Library" class="font-sans font-bold px-4 rounded cursor-pointer no-underline bg-green-400 hover:bg-green-500 block w-full py-4 text-white items-center justify-center">
     </form>
 
-    <hr class="border border-grey-light my-6" />
+    <hr class="border border-gray-300 my-6" />
 
     <ul class="list-reset mt-4">
       <li class="py-4" v-for="library in libraries" :key="library.id" :library="library">
@@ -101,13 +101,13 @@ export default {
   },
   methods: {
     addLibrary () {
-      this.$http.secured.post('/api/v1/libraries', { library: { name: this.newLibrary.name, content: this.newLibrary.content } })
+      this.$http.secured.post('/api/v1/libraries', { library: { name: this.newLibrary.name, content: this.newLibrary.content, record_ids: this.newLibrary.records } })
         .then(responce => {
           this.libraries.push(responce.data)
           this.newLibrary = {
             name: '',
             content: '',
-            records: ''
+            records: []
           }
           this.error = ''
         })

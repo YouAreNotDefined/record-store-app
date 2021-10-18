@@ -4,6 +4,7 @@ Rails.application.routes.draw do
       resources :records
       resources :artists
       resources :libraries
+      resources :recordlibraries
     end
   end
 

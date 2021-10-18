@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_17_092006) do
+ActiveRecord::Schema.define(version: 2021_10_18_042158) do
 
   create_table "artists", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name"
@@ -34,8 +34,10 @@ ActiveRecord::Schema.define(version: 2021_10_17_092006) do
     t.bigint "library_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "user_id"
     t.index ["library_id"], name: "index_record_libraries_on_library_id"
     t.index ["record_id"], name: "index_record_libraries_on_record_id"
+    t.index ["user_id"], name: "index_record_libraries_on_user_id"
   end
 
   create_table "records", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -60,6 +62,7 @@ ActiveRecord::Schema.define(version: 2021_10_17_092006) do
   add_foreign_key "libraries", "users"
   add_foreign_key "record_libraries", "libraries"
   add_foreign_key "record_libraries", "records"
+  add_foreign_key "record_libraries", "users"
   add_foreign_key "records", "artists"
   add_foreign_key "records", "users"
 end
